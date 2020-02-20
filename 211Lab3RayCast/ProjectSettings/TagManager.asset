@@ -8,6 +8,10 @@ TagManager:
   - Carrot
   - TeleCandy
   - TeleReciever
+  - TS2
+  - TS3
+  - TR2
+  - TR3
   layers:
   - Default
   - TransparentFX

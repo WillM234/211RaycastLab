@@ -11,16 +11,26 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 startPos;
 
     [Header("Script References")]
-    public TeleportScript teleportScript;
-    public TeleportRecieveScript teleportRecieve;
+    public TeleportScript TS1;
+    public TeleportScript TS2;
+    public TeleportScript TS3;
+    public TeleportRecieveScript TR1;
+    public TeleportRecieveScript TR2;
+    public TeleportRecieveScript TR3;
+
 
     [Header("Teleport Object References")]
     public GameObject Sender1;
-  
+    public GameObject Sender2;
+    public GameObject Sender3;
+
+
     public GameObject Reciever1;
- 
-    
- 
+    public GameObject Reciever2;
+    public GameObject Reciever3;
+
+
+
 
     [Header("Panel and UI References")]
     public GameObject PausePanel;
@@ -32,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     public Text NumberCollected;
     private bool GamePaused = false;
     public int currentLevel;
-    private int maxLevel = 6;
+    private int maxLevel = 4;
 
     [Header("Pause Menu References")]
     public Text PauseTotal;
@@ -129,7 +139,7 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawLine(transform.position, transform.position + (Vector3)direction, Color.yellow);
         if(hit.collider != null)
         {
-            if (hit.collider.tag == "Carrot" || hit.collider.tag == "Candy"||hit.collider.tag == "TeleCandy"||hit.collider.tag == "TeleReciever")
+            if (hit.collider.tag == "Carrot" || hit.collider.tag == "Candy"||hit.collider.tag == "TeleCandy"||hit.collider.tag == "TeleReciever"|| hit.collider.tag == "TS2" || hit.collider.tag == "TS3" || hit.collider.tag == "TR2" || hit.collider.tag == "TR3")
             {
                 target = hit.transform.position;
             }
@@ -196,8 +206,38 @@ public class PlayerMovement : MonoBehaviour
             {
                 target = Reciever1.GetComponent<TeleportRecieveScript>().SendTo;
             }//fetching coordinates and detecting bools for teleporter set 1
+            if (other.gameObject.tag == "TS2")
+            {
+                if (Sender2.GetComponent<TeleportScript>().Sending == true && Reciever2.GetComponent<TeleportRecieveScript>().recieving == true)
+                {
+                    target = Sender2.GetComponent<TeleportScript>().TeleportTo;
+                }//fetching coordinates and detecting bools for teleporter set 1
+            }
 
-          
+            if (other.gameObject.tag == "TS3")
+            {
+                if (Sender3.GetComponent<TeleportScript>().Sending == true && Reciever3.GetComponent<TeleportRecieveScript>().recieving == true)
+                {
+                    target = Sender3.GetComponent<TeleportScript>().TeleportTo;
+                }//fetching coordinates and detecting bools for teleporter set 1
+            }
+
+            if (other.gameObject.tag == "TR2")
+            {
+                if (Reciever2.GetComponent<TeleportRecieveScript>().sending == true && Sender2.GetComponent<TeleportScript>().Recieving == true)
+                {
+                    target = Reciever2.GetComponent<TeleportRecieveScript>().SendTo;
+                }//fetching coordinates and detecting bools for teleporter set 1
+            }
+
+            if (other.gameObject.tag == "TR3")
+            {
+                if (Reciever3.GetComponent<TeleportRecieveScript>().sending == true && Sender3.GetComponent<TeleportScript>().Recieving == true)
+                {
+                    target = Reciever3.GetComponent<TeleportRecieveScript>().SendTo;
+                }//fetching coordinates and detecting bools for teleporter set 1
+            }
+
         }
     }
 }
