@@ -14,6 +14,14 @@ public class PlayerMovement : MonoBehaviour
     public TeleportScript teleportScript;
     public TeleportRecieveScript teleportRecieve;
 
+    [Header("Teleport Object References")]
+    public GameObject Sender1;
+  
+    public GameObject Reciever1;
+ 
+    
+ 
+
     [Header("Panel and UI References")]
     public GameObject PausePanel;
     public GameObject NextlevelPanel;
@@ -176,17 +184,20 @@ public class PlayerMovement : MonoBehaviour
 
        if(other.gameObject.tag == "TeleCandy")
         {
-            if (teleportScript.Sending == true && teleportRecieve.recieving == true)
+            if (Sender1.GetComponent<TeleportScript>().Sending == true && Reciever1.GetComponent<TeleportRecieveScript>().recieving == true)
             {
-                target = teleportScript.TeleportTo;
-            }     
+                target = Sender1.GetComponent<TeleportScript>().TeleportTo;
+            }//fetching coordinates and detecting bools for teleporter set 1
+            
         }
        if(other.gameObject.tag == "TeleReciever")
         {
-            if(teleportRecieve.sending == true && teleportScript.Recieving == true)
+            if(Reciever1.GetComponent<TeleportRecieveScript>().sending == true && Sender1.GetComponent<TeleportScript>().Recieving == true)
             {
-                target = teleportRecieve.SendTo;
-            }
+                target = Reciever1.GetComponent<TeleportRecieveScript>().SendTo;
+            }//fetching coordinates and detecting bools for teleporter set 1
+
+          
         }
     }
 }
