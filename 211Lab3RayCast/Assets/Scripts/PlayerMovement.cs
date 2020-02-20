@@ -10,6 +10,10 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 target;
     public Vector2 startPos;
 
+    [Header("Script References")]
+    public TeleportScript teleportScript;
+    public TeleportRecieveScript teleportRecieve;
+
     [Header("Panel and UI References")]
     public GameObject PausePanel;
     public GameObject NextlevelPanel;
@@ -18,12 +22,21 @@ public class PlayerMovement : MonoBehaviour
     public Text Health;
     public Text CurrentLevel;
     public Text NumberCollected;
-    public Text PauseTotal;
     private bool GamePaused = false;
     public int currentLevel;
     private int maxLevel = 6;
 
-    [Header("Health System")]
+    [Header("Pause Menu References")]
+    public Text PauseTotal;
+    public Text Pauselevel;
+
+    [Header("Win Panel References")]
+    public Text winTotal;
+
+    [Header("Lose Panel References")]
+    public Text loseTotal;
+
+    [Header("Health System References")]
     private int totalHealth = 1;
     private int currentHealth;
     private bool isDead;
@@ -33,13 +46,17 @@ public class PlayerMovement : MonoBehaviour
     public int currentTotal;
     private bool hasWon;
 
+ 
+
     // Start is called before the first frame update
     void Start()
     {
         target = startPos;
         currentHealth = totalHealth;
+
+        //setting current level in HUD and pause menu
         CurrentLevel.text = ("Level: " + currentLevel + " / " + maxLevel);
-        
+        Pauselevel.text = ("Level: " + currentLevel + " / " + maxLevel);
     }
 
     // Update is called once per frame
@@ -104,13 +121,14 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawLine(transform.position, transform.position + (Vector3)direction, Color.yellow);
         if(hit.collider != null)
         {
-            if (hit.collider.tag == "Carrot" || hit.collider.tag == "Candy")
+            if (hit.collider.tag == "Carrot" || hit.collider.tag == "Candy"||hit.collider.tag == "TeleCandy"||hit.collider.tag == "TeleReciever")
             {
                 target = hit.transform.position;
             }
          }
 
         transform.position = Vector2.Lerp(transform.position, target, 0.5f);
+        
 
         //win condition
         if(currentTotal == WinTotal)
@@ -127,10 +145,11 @@ public class PlayerMovement : MonoBehaviour
         //updating Player health in HUD
         Health.text = ("Health: " + currentHealth + " / " + totalHealth);
 
-        //updating total collected in HUD & pause menu
+        //updating total collected in HUD, pause menu, lose, and win panels
         NumberCollected.text = ("Candies Collected: " + currentTotal + " / " + WinTotal);
         PauseTotal.text = ("Candies Collected: " + currentTotal + " / " + WinTotal);
-
+        winTotal.text = ("Candies Collected: " + currentTotal + " / " + WinTotal);
+        loseTotal.text = ("Candies Collected: " + currentTotal + " / " + WinTotal);
     }
 
     public void UnpauseGame()
@@ -141,10 +160,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    public void ReloadScene()
-    {
-        EditorSceneManager.LoadScene(EditorSceneManager.GetActiveScene().buildIndex);
-    }
+ 
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -158,6 +174,19 @@ public class PlayerMovement : MonoBehaviour
             currentTotal += 1;
         }//adds 1 to current collable total based on the object's tag
 
-
+       if(other.gameObject.tag == "TeleCandy")
+        {
+            if (teleportScript.Sending == true && teleportRecieve.recieving == true)
+            {
+                target = teleportScript.TeleportTo;
+            }     
+        }
+       if(other.gameObject.tag == "TeleReciever")
+        {
+            if(teleportRecieve.sending == true && teleportScript.Recieving == true)
+            {
+                target = teleportRecieve.SendTo;
+            }
+        }
     }
 }
